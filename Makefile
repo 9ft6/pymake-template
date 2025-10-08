@@ -44,7 +44,7 @@ venv: ## Create a virtual environment with Python $(PYTHON_VERSION) in $(VENV_DI
 	"$$PY" -m venv "$(VENV_DIR)"; \
 	$(ACTIVATE) && python -m pip install -U pip
 
-install: ## Install dependencies (requirements.txt or pyproject.toml)
+install: ## Full Install (venv, requirements.txt or pyproject.toml and dependencies)
 	@set -eu; \
 	if [ ! -f "$(ACTIVATE_SCRIPT)" ]; then \
 		$(MAKE) --no-print-directory venv; \
@@ -69,7 +69,7 @@ install: ## Install dependencies (requirements.txt or pyproject.toml)
 		fi; \
 	fi
 
-install-deps:
+install-deps:  ## Install dependencies 
 	@set -eu; \
 	if [ -n "$(strip $(APT_PACKAGES))" ]; then \
 		echo "Installing with apt: $(APT_PACKAGES)"; \
