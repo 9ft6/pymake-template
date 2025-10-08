@@ -13,12 +13,14 @@ Settings:
 - PYTHON_VERSION - Python version (default 3.13)
 - VENV_DIR - path to the virtual environment (default venv)
 - ENTRYPOINT - command/script to run (default app.py)
-- UBUNTU_PACKAGES - list of Ubuntu system packages installed at the end of `make install`
+- APT_PACKAGES - list packages installed by apt
+- APT_GET_PACKAGES - list packages installed by apt-get
+- SNAP_PACKAGES - list packages installed by snap
 
 Commands
 - help - show available commands
-- venv - create a virtual environment
-- install - install dependencies (+ Ubuntu packages if provided)
+- venv - create a virtual environment and install requirements.txt
+- install - install venv, dependencies (+ Ubuntu packages if provided)
 - run - run the application
 - clean - remove build artifacts
 - clean-venv - remove virtual environment
