@@ -9,7 +9,7 @@
 # - SNAP_PACKAGES: system packages to install via snap (optional)
 
 PYTHON_VERSION   ?= 3.13
-VENV_DIR         ?= .venv
+VENV_DIR         ?= venv
 ENTRYPOINT       ?= app.py
 APT_PACKAGES     :=
 APT_GET_PACKAGES :=
