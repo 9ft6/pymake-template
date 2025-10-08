@@ -4,14 +4,18 @@
 # - VENV_DIR: path to the virtual environment (default .venv)
 # - ENTRYPOINT: command/script to run the application (default app.py)
 # - ACTIVATE: venv activation command (used in commands)
-# - UBUNTU_PACKAGES: system packages to install via apt-get/apt at the end of 'make install' (optional)
+# - APT_PACKAGES: system packages to install via apt (optional)
+# - APT_GET_PACKAGES: system packages to install via apt-get (optional)
+# - SNAP_PACKAGES: system packages to install via snap (optional)
 
-PYTHON_VERSION ?= 3.13
-VENV_DIR       ?= .venv
-ENTRYPOINT     ?= app.py
-UBUNTU_PACKAGES?= 
-ACTIVATE_SCRIPT:= $(VENV_DIR)/bin/activate
-ACTIVATE       := . $(ACTIVATE_SCRIPT)
+PYTHON_VERSION   ?= 3.13
+VENV_DIR         ?= .venv
+ENTRYPOINT       ?= app.py
+APT_PACKAGES     :=
+APT_GET_PACKAGES :=
+SNAP_PACKAGES    :=
+ACTIVATE_SCRIPT  := $(VENV_DIR)/bin/activate
+ACTIVATE         := . $(ACTIVATE_SCRIPT)
 
 .DEFAULT_GOAL := help
 .PHONY: help venv install run clean clean-venv
@@ -63,6 +67,36 @@ install: ## Install dependencies (requirements.txt or pyproject.toml)
 		else \
 			echo "apt/apt-get not found; skipping Ubuntu packages installation"; \
 		fi; \
+	fi
+
+install-deps:
+	@set -eu; \
+	if [ -n "$(strip $(APT_PACKAGES))" ]; then \
+		echo "Installing with apt: $(APT_PACKAGES)"; \
+		if ! command -v apt >/dev/null 2>&1; then \
+			echo "Error: command 'apt' not found." >&2; exit 1; \
+		fi; \
+		sudo apt update && sudo apt install -y $(APT_PACKAGES); \
+		echo "Packages installed successfully with apt."; \
+	fi; \
+	if [ -n "$(strip $(APT_GET_PACKAGES))" ]; then \
+		echo "Installing with apt-get: $(APT_GET_PACKAGES)"; \
+		if ! command -v apt-get >/dev/null 2>&1; then \
+			echo "Error: command 'apt-get' not found." >&2; exit 1; \
+		fi; \
+		sudo apt-get update && sudo apt-get install -y $(APT_GET_PACKAGES); \
+		echo "Packages installed successfully with apt-get."; \
+	fi; \
+	if [ -n "$(strip $(SNAP_PACKAGES))" ]; then \
+		echo "Installing with snap: $(SNAP_PACKAGES)"; \
+		if ! command -v snap >/dev/null 2>&1; then \
+			echo "Error: command 'snap' not found." >&2; exit 1; \
+		fi; \
+		sudo snap install $(SNAP_PACKAGES); \
+		echo "Packages installed successfully with snap."; \
+	fi; \
+	if [ -z "$(strip $(APT_PACKAGES))" ] && [ -z "$(strip $(APT_GET_PACKAGES))" ] && [ -z "$(strip $(SNAP_PACKAGES))" ]; then \
+		echo "No packages specified to install."; \
 	fi
 
 run: ## Run the application (ENTRYPOINT=$(ENTRYPOINT))
