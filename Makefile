@@ -45,19 +45,8 @@ venv: ## Create a virtual environment with Python $(PYTHON_VERSION) in $(VENV_DI
 
 install: ## Full Install (venv, requirements.txt or pyproject.toml and dependencies)
 	@set -eu; \
-	if [ ! -f "$(ACTIVATE_SCRIPT)" ]; then \
-		$(MAKE) --no-print-directory venv; \
-	fi; \
-	if [ -n "$(strip $(UBUNTU_PACKAGES))" ]; then \
-		echo "Installing Ubuntu packages: $(UBUNTU_PACKAGES)"; \
-		if command -v apt-get >/dev/null 2>&1; then \
-			sudo apt-get update && sudo apt-get install -y $(UBUNTU_PACKAGES); \
-		elif command -v apt >/dev/null 2>&1; then \
-			sudo apt update && sudo apt install -y $(UBUNTU_PACKAGES); \
-		else \
-			echo "apt/apt-get not found; skipping Ubuntu packages installation"; \
-		fi; \
-	fi
+	make --no-print-directory venv; \
+	make --no-print-directory install-deps; \
 
 install-deps:  ## Install dependencies 
 	@set -eu; \
