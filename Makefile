@@ -9,7 +9,7 @@
 PYTHON_VERSION ?= 3.13
 VENV_DIR       ?= .venv
 ENTRYPOINT     ?= app.py
-UBUNTU_PACKAGES?= make
+UBUNTU_PACKAGES?= 
 ACTIVATE_SCRIPT:= $(VENV_DIR)/bin/activate
 ACTIVATE       := . $(ACTIVATE_SCRIPT)
 
